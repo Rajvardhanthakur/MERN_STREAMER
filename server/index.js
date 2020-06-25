@@ -31,4 +31,30 @@ app.post('/api/users/register', (req, res) => {
     })
 })
 
+app.post('/api/user/login', (req, res) => {
+    //find the email
+    User.findOne({ email: req.body.email }, (err, user) => {
+        if(!user)
+        return res.json({
+            loginSuccess: false,
+            message: "Auth failed, email not found"
+        })
+
+        //comparePassword
+
+        user.comparePassword(req.body.password, (err, isMatch)=> {
+            if(!isMatch){
+                return res.json ({ loginSuccess: false, message: "wrong password"})
+            }
+        })
+
+        //generateToken
+        user.generateToken((err, user) => {
+
+        })
+    })
+});
+
+
+
 app.listen(5000);
